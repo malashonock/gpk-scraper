@@ -22,7 +22,7 @@ export const parseArgs = () => {
   const checkpointCodes = [];
 
   if (!argv.checkpoint) {
-    checkpointCodes.push(...Object.values(BORDER_CHECKPOINTS));
+    checkpointCodes.push(...Object.keys(BORDER_CHECKPOINTS));
   } else if (Array.isArray(argv.checkpoint)) {
     for (const checkpointCode of argv.checkpoint) {
       validateBorderCheckpoint(checkpointCode);
