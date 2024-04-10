@@ -4,9 +4,10 @@ import { saveAllToCsv } from './csv.mjs';
 
 (async () => {
   try {
-    const { dateFromAsText, dateToAsText, checkpointCodes } = parseArgs();
+    const { dateFromAsText, dateToAsText, checkpointCodes, outputDir } =
+      parseArgs();
     const stats = await getStats(dateFromAsText, dateToAsText, checkpointCodes);
-    await saveAllToCsv(stats);
+    await saveAllToCsv(stats, outputDir);
   } catch (error) {
     console.error(error);
   }
