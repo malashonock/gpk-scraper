@@ -5,9 +5,15 @@ import { parseDateRu } from './date-utils.mjs';
 
 export const saveAllToCsv = async (stats, outputDir) => {
   const statsByDate = stats.reduce((aggregation, stat) => {
-    const date = parseDateRu(stat.date);
-    const currentDayStats = aggregation.get(date) ?? [];
-    return aggregation.set(date, [...currentDayStats, stat]);
+    try {
+      const date = parseDateRu(stat.date);
+      const currentDayStats = aggregation.get(date) ?? [];
+      return aggregation.set(date, [...currentDayStats, stat]);
+    } catch (error) {
+      // Some entries may contain 'очереди' in date field
+      // Ignore such entries
+      return aggregation;
+    }
   }, new Map());
 
   const saveTasks = [];
