@@ -2,6 +2,9 @@ import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import process from 'node:process';
 
+import { getISODateString } from './date-utils.mjs';
+import { BORDER_CHECKPOINTS } from './constants.mjs';
+
 export const parseArgs = () => {
   const argv = yargs(hideBin(process.argv)).argv;
 
