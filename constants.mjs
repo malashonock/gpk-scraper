@@ -1,6 +1,6 @@
 export const BORDER_CHECKPOINTS = {
-  Брест: 'brest',
-  'Каменный лог': 'stone_log',
-  Бенякони: 'benekainys',
-  Григоровщина: 'grigorov',
+  brest: 'Брест',
+  stone_log: 'Каменный лог',
+  benekainys: 'Бенякони',
+  grigorov: 'Григоровщина',
 };
