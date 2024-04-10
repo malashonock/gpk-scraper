@@ -2,7 +2,7 @@
   "name": "gtk-scraper",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "puppeteer": "^22.6.3"
+    "@types/yargs": "^17.0.32",
+    "puppeteer": "^22.6.3",
+    "yargs": "^17.7.2"
   }
 }
