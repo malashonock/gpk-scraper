@@ -31,9 +31,12 @@ export const parseArgs = () => {
     checkpointCodes.push(checkpointCode);
   }
 
+  const outputDir = argv.out ?? './data';
+
   return {
     dateFromAsText,
     dateToAsText,
     checkpointCodes,
+    outputDir,
   };
 };

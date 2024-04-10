@@ -3,7 +3,7 @@ import { access, mkdir, rm } from 'fs/promises';
 
 import { parseDateRu } from './utils/date.utils.mjs';
 
-export const saveAllToCsv = async (stats) => {
+export const saveAllToCsv = async (stats, outputDir) => {
   const statsByDate = stats.reduce((aggregation, stat) => {
     const date = parseDateRu(stat.date);
     const currentDayStats = aggregation.get(date) ?? [];
@@ -13,7 +13,7 @@ export const saveAllToCsv = async (stats) => {
   const saveTasks = [];
 
   for (const [date, dayStats] of statsByDate) {
-    const saveTask = saveDayStats(date, dayStats);
+    const saveTask = saveDayStats(date, dayStats, outputDir);
     saveTasks.push(saveTask);
   }
 
@@ -24,9 +24,8 @@ export const saveAllToCsv = async (stats) => {
   }
 };
 
-const saveDayStats = async (date, dayStats) => {
-  const OUT_DIR = './data';
-  const filePath = `${OUT_DIR}/${date}.csv`;
+const saveDayStats = async (date, dayStats, outputDir) => {
+  const filePath = `${outputDir}/${date}.csv`;
 
   const csvWriter = createObjectCsvWriter({
     path: filePath,
@@ -41,7 +40,7 @@ const saveDayStats = async (date, dayStats) => {
   });
 
   try {
-    await checkDirExists(OUT_DIR);
+    await checkDirExists(outputDir);
     await removeExistingFile(filePath);
     await csvWriter.writeRecords(dayStats);
   } catch (error) {
