@@ -37,6 +37,7 @@ const saveDayStats = async (date, dayStats) => {
       { id: 'queueLength', title: 'Очередь на выезд' },
     ],
     encoding: 'utf-8',
+    fieldDelimiter: ';',
   });
 
   try {
