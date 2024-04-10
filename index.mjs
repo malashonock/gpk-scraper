@@ -64,8 +64,7 @@ import { saveAllToCsv } from './csv.mjs';
         const content = await response.json();
 
         return content.ITEMS.map((entry) => {
-          const [dateRu, time] = entry.NAME.split(' ');
-          const date = new Date(dateRu).toISOString().slice(0, 10);
+          const [date, time] = entry.NAME.split(' ');
           const queueLength = +entry[`PROPERTY_${borderCheckpoint.toUpperCase()}_OUT_L_VALUE`];
 
           return {

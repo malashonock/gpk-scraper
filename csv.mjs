@@ -1,9 +1,11 @@
 import { createObjectCsvWriter } from 'csv-writer';
 import { access, mkdir, rm } from 'fs/promises';
 
+import { parseDateRu } from './date-utils.mjs';
+
 export const saveAllToCsv = async (stats) => {
   const statsByDate = stats.reduce((aggregation, stat) => {
-    const { date } = stat;
+    const date = parseDateRu(stat.date);
     const currentDayStats = aggregation.get(date) ?? [];
     return aggregation.set(date, [...currentDayStats, stat]);
   }, new Map());
