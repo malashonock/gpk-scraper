@@ -6,6 +6,7 @@ import process from 'node:process';
 import { validateBorderCheckpoint } from './validators.mjs';
 import { BORDER_CHECKPOINTS } from './constants.mjs';
 import { saveAllToCsv } from './csv.mjs';
+import { getISODateString } from './date-utils.mjs';
 
 (async () => {
   const argv = yargs(hideBin(process.argv)).argv;
@@ -15,7 +16,7 @@ import { saveAllToCsv } from './csv.mjs';
   }
 
   const dateFromAsText = argv.from;
-  const dateToAsText = argv.to || new Date().toISOString().slice(0, 10);
+  const dateToAsText = argv.to || getISODateString(new Date());
 
   if (new Date(dateToAsText) < new Date(dateFromAsText)) {
     throw new Error('End date cannot be earlier than start date');
@@ -46,26 +47,35 @@ import { saveAllToCsv } from './csv.mjs';
   });
 
   const stats = await page.evaluate(
-    async (dateFromAsText, dateToAsText, checkpointCodes, BORDER_CHECKPOINTS) => {
+    async (
+      dateFromAsText,
+      dateToAsText,
+      checkpointCodes,
+      BORDER_CHECKPOINTS
+    ) => {
       const dateFrom = new Date(dateFromAsText);
       const dateTo = new Date(dateToAsText);
       const downloadTasks = [];
       const stats = [];
 
       const downloadFn = async (checkpointCode, date) => {
-        const response = await fetch('https://gpk.gov.by/local/ajax/order-archive.php', {
-          method: 'POST',
-          body: new URLSearchParams({
-            ppr: checkpointCode,
-            date: date.toLocaleDateString('ru-RU'),
-          }),
-        });
+        const response = await fetch(
+          'https://gpk.gov.by/local/ajax/order-archive.php',
+          {
+            method: 'POST',
+            body: new URLSearchParams({
+              ppr: checkpointCode,
+              date: date.toLocaleDateString('ru-RU'),
+            }),
+          }
+        );
 
         const content = await response.json();
 
         return content.ITEMS.map((entry) => {
           const [date, time] = entry.NAME.split(' ');
-          const queueLength = +entry[`PROPERTY_${checkpointCode.toUpperCase()}_OUT_L_VALUE`];
+          const queueLength =
+            +entry[`PROPERTY_${checkpointCode.toUpperCase()}_OUT_L_VALUE`];
 
           return {
             borderCheckpoint: BORDER_CHECKPOINTS[checkpointCode],
@@ -76,7 +86,11 @@ import { saveAllToCsv } from './csv.mjs';
         });
       };
 
-      for (let date = dateFrom; date <= dateTo; date.setDate(date.getDate() + 1)) {
+      for (
+        let date = dateFrom;
+        date <= dateTo;
+        date.setDate(date.getDate() + 1)
+      ) {
         for (const checkpointCode of checkpointCodes) {
           const downloadTask = downloadFn(checkpointCode, date);
           downloadTasks.push(downloadTask);
