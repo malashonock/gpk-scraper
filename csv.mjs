@@ -1,7 +1,7 @@
 import { createObjectCsvWriter } from 'csv-writer';
 import { access, mkdir, rm } from 'fs/promises';
 
-import { parseDateRu } from './date-utils.mjs';
+import { parseDateRu } from './utils/date.utils.mjs';
 
 export const saveAllToCsv = async (stats) => {
   const statsByDate = stats.reduce((aggregation, stat) => {

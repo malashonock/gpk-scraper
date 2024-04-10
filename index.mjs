@@ -6,7 +6,7 @@ import process from 'node:process';
 import { validateBorderCheckpoint } from './validators.mjs';
 import { BORDER_CHECKPOINTS } from './constants.mjs';
 import { saveAllToCsv } from './csv.mjs';
-import { getISODateString } from './date-utils.mjs';
+import { getISODateString } from './utils/date.utils.mjs';
 
 (async () => {
   const argv = yargs(hideBin(process.argv)).argv;
