@@ -5,6 +5,7 @@ import process from 'node:process';
 
 import { validateBorderCheckpoint } from './validators.mjs';
 import { BORDER_CHECKPOINTS } from './constants.mjs';
+import { saveAllToCsv } from './csv.mjs';
 
 (async () => {
   const argv = yargs(hideBin(process.argv)).argv;
@@ -63,7 +64,8 @@ import { BORDER_CHECKPOINTS } from './constants.mjs';
         const content = await response.json();
 
         return content.ITEMS.map((entry) => {
-          const [date, time] = entry.NAME.split(' ');
+          const [dateRu, time] = entry.NAME.split(' ');
+          const date = new Date(dateRu).toISOString().slice(0, 10);
           const queueLength = +entry[`PROPERTY_${borderCheckpoint.toUpperCase()}_OUT_L_VALUE`];
 
           return {
@@ -100,5 +102,5 @@ import { BORDER_CHECKPOINTS } from './constants.mjs';
 
   await browser.close();
 
-  console.log(stats);
+  await saveAllToCsv(stats);
 })();
